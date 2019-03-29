@@ -36,8 +36,8 @@ void system_init()
 #ifdef STM32F103C8
   /*
    * Author Paul
-   * +++   Warning, warning Robisson     +++
-   * +++   Undocumentated STM32 feature  +++
+   * +++   Warning, warning Robinson !   +++
+   * +++   Undocumented STM32 feature  +++
    * +++   ahead!                        +++
    *
    * All AFIO GPIO pins are initialised together in one action to prevent
@@ -74,12 +74,12 @@ void system_init()
   EXTI_InitTypeDef EXTI_InitStructure;
   if (bit_istrue(settings.flags, BITFLAG_HARD_LIMIT_ENABLE))
 	{
-      EXTI_InitStructure.EXTI_Line = CONTROL_MASK|LIMIT_MASK;    //
 	  GPIO_EXTILineConfig(GPIO_LIMIT_PORT, X_LIMIT_BIT);
 	  GPIO_EXTILineConfig(GPIO_LIMIT_PORT, Y_LIMIT_BIT);
 	  GPIO_EXTILineConfig(GPIO_LIMIT_PORT, Z_LIMIT_BIT);
 	  GPIO_EXTILineConfig(GPIO_LIMIT_PORT, A_LIMIT_BIT); //
 	  GPIO_EXTILineConfig(GPIO_LIMIT_PORT, B_LIMIT_BIT); //
+	  EXTI_InitStructure.EXTI_Line = CONTROL_MASK|LIMIT_MASK;    //
 	}
   // end of limits init code
   else {
@@ -87,7 +87,11 @@ void system_init()
   }
 
   EXTI_InitStructure.EXTI_Mode = EXTI_Mode_Interrupt; //Interrupt mode, optional values for the interrupt EXTI_Mode_Interrupt and event EXTI_Mode_Event.
-  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling; //Trigger mode, can be a falling edge trigger EXTI_Trigger_Falling, the rising edge triggered EXTI_Trigger_Rising, or any level (rising edge and falling edge trigger EXTI_Trigger_Rising_Falling)
+  if (bit_istrue(settings.flags, BITFLAG_INVERT_LIMIT_PINS)){
+	  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling; //Trigger mode, can be a falling edge trigger EXTI_Trigger_Falling, the rising edge triggered EXTI_Trigger_Rising, or any level (rising edge and falling edge trigger EXTI_Trigger_Rising_Falling)
+  } else {
+	  EXTI_InitStructure.EXTI_Trigger = EXTI_Trigger_Rising_Falling;
+  }
   EXTI_InitStructure.EXTI_LineCmd = ENABLE;
   EXTI_Init(&EXTI_InitStructure);
 
@@ -135,6 +139,9 @@ uint8_t system_control_get_state() //uint8_t system_control_get_state()
   #ifdef INVERT_CONTROL_PIN_MASK
     pin ^= INVERT_CONTROL_PIN_MASK;
   #endif
+//  if (bit_istrue(settings.flags, BITFLAG_INVERT_LIMIT_PINS)){ //Paul, all control and limit pins are inverted or not
+//	  pin ^= CONTROL_MASK;
+//  }
   if (pin) {
     #ifdef ENABLE_SAFETY_DOOR_INPUT_PIN
       if (bit_isfalse(pin,(1<<CONTROL_SAFETY_DOOR_BIT))) { control_state |= CONTROL_PIN_INDEX_SAFETY_DOOR; }
@@ -200,7 +207,10 @@ void EXTI9_5_IRQHandler(void)
 #else
 		else if (bit_istrue(pin, CONTROL_PIN_INDEX_SAFETY_DOOR))
 		{
-			bit_true(sys_rt_exec_state, EXEC_SAFETY_DOOR);
+			if (system_check_safety_door_ajar()) { //Paul, Safety door triggers of rising & falling edge
+				//check whether the door was truly opened
+				bit_true(sys_rt_exec_state, EXEC_SAFETY_DOOR);
+			}
 		}
 #endif
 
@@ -250,7 +260,7 @@ uint8_t system_execute_line(char *line)
 {
   uint8_t char_counter = 1;
   uint8_t helper_var = 0; // Helper variable
-  float rc;
+  //float rc;
 
   float parameter, value;
   switch( line[char_counter] ) {
