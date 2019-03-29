@@ -76,7 +76,8 @@ static void report_util_setting_string(uint8_t n) {
     case 30: printPgmString(PSTR("rpm max")); break;
     case 31: printPgmString(PSTR("rpm min")); break;
     case 32: printPgmString(PSTR("laser")); break;
-
+    //Added by Paul, 21/01/19
+    case 33: printPgmString(PSTR("fault")); break;
     default:
       n -= AXIS_SETTINGS_START_VAL;
       uint8_t idx = 0;
@@ -253,6 +254,9 @@ void report_grbl_settings() {
   #else
     report_util_uint8_setting(32,0);
   #endif
+    //Add by Paul, 21/01/19 Fault pin monitoring
+  report_util_uint8_setting(33,bit_istrue(settings.flags,BITFLAG_FAULT_PIN));
+
 //    report_util_uint8_setting(40,settings.n_pieces);
 //    report_util_setting_string(40);
 //    report_util_float_setting(41,settings.rpm_max_s,N_DECIMAL_SETTINGVALUE);
