@@ -47,6 +47,8 @@
 #define EXEC_ALARM_HOMING_FAIL_DOOR     7
 #define EXEC_ALARM_HOMING_FAIL_PULLOFF  8
 #define EXEC_ALARM_HOMING_FAIL_APPROACH 9
+// Paul, added for Fault on Spindle Motor drivers 21/01/19
+#define EXEC_ALARM_HARD_FAULT           10
 
 // Override bit maps. Realtime bitflags to control feed, rapid, spindle, and coolant overrides.
 // Spindle/coolant and feed/rapids are separated into two controlling flag variables.
@@ -111,7 +113,7 @@
 //Pauls addon for DC motor fault handling
   #define CONTROL_PIN_INDEX_FAULT         bit(4) // the fifth control pin for the dc motor fault
 #else
-  #define N_CONTROL_PIN 3
+  #define N_CONTROL_PIN 4
   #define CONTROL_PIN_INDEX_RESET         bit(0)
   #define CONTROL_PIN_INDEX_FEED_HOLD     bit(1)
   #define CONTROL_PIN_INDEX_CYCLE_START   bit(2)

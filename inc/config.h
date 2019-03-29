@@ -38,8 +38,11 @@
 // If doing so, simply comment out these two defines and see instructions below.
 #define DEFAULTS_GENERIC
 //#define DEFAULT_CNC3020
-//#define STM32F103C8
+
+#define SG
+#define STM32F103C8
 #define USEUSB
+
 #define CPU_MAP_STM32F103 // CPU_MAP_STM32F103
 #ifdef WIN32
 #define CPU_MAP_WIN32
@@ -53,8 +56,8 @@
 
 //#define SYSCLK_FREQ_72MHz
 // Serial baud rate
-#define BAUD_RATE 230400
-//#define BAUD_RATE 115200
+//#define BAUD_RATE 230400
+#define BAUD_RATE 115200
 
 // Define realtime command special characters. These characters are 'picked-off' directly from the
 // serial read data stream and are not passed to the grbl line execution parser. Select characters
@@ -117,10 +120,14 @@
 // on separate pin, but homed in one cycle. Also, it should be noted that the function of hard limits
 // will not be affected by pin sharing.
 // NOTE: Defaults are set for a traditional 3-axis CNC machine. Z-axis first to clear, followed by X & Y.
-#define HOMING_CYCLE_0 (1<<Z_AXIS)                // REQUIRED: First move Z to clear workspace.
-#define HOMING_CYCLE_1 ((1<<X_AXIS)|(1<<Y_AXIS))  // OPTIONAL: Then move X,Y at the same time.
-// #define HOMING_CYCLE_2  ((1<<Z_AXIS)|(1<<A_AXIS)|(1<<B_AXIS)) // OPTIONAL: Uncomment and add axes mask to enable
-
+//#define HOMING_CYCLE_0 (1<<Z_AXIS)                // REQUIRED: First move Z to clear workspace.
+#ifdef MG
+#define HOMING_CYCLE_0 ((1<<X_AXIS)|(1<<Y_AXIS))  // OPTIONAL: Then move X,Y at the same time.
+#else
+#define HOMING_CYCLE_0 (1<<Z_AXIS)
+#define HOMING_CYCLE_1 ((1<<X_AXIS)|(1<<Y_AXIS))
+//#define HOMING_CYCLE_2  ((1<<Z_AXIS)|(1<<A_AXIS)|(1<<B_AXIS)) // OPTIONAL: Uncomment and add axes mask to enable
+#endif
 // NOTE: The following are two examples to setup homing for 2-axis machines.
 // #define HOMING_CYCLE_0 ((1<<X_AXIS)|(1<<Y_AXIS))  // NOT COMPATIBLE WITH COREXY: Homes both X-Y in one cycle. 
 
@@ -136,7 +143,7 @@
 // cycle is still invoked by the $H command. This is disabled by default. It's here only to address
 // users that need to switch between a two-axis and three-axis machine. This is actually very rare.
 // If you have a two-axis machine, DON'T USE THIS. Instead, just alter the homing cycle for two-axes.
-// #define HOMING_SINGLE_AXIS_COMMANDS // Default disabled. Uncomment to enable.
+#define HOMING_SINGLE_AXIS_COMMANDS // Default disabled. Uncomment to enable.
 
 // After homing, Grbl will set by default the entire machine space into negative space, as is typical
 // for professional CNC machines, regardless of where the limit switches are located. Uncomment this
@@ -207,8 +214,8 @@
 // normally-closed switches on the specified pins, rather than the default normally-open switches.
 // NOTE: The top option will mask and invert all control pins. The bottom option is an example of
 // inverting only two control pins, the safety door and reset. See cpu_map.h for other bit definitions.
-// #define INVERT_CONTROL_PIN_MASK CONTROL_MASK // Default disabled. Uncomment to disable.
-// #define INVERT_CONTROL_PIN_MASK ((1<<CONTROL_SAFETY_DOOR_BIT)|(CONTROL_RESET_BIT)) // Default disabled.
+//#define INVERT_CONTROL_PIN_MASK CONTROL_MASK // Default disabled. Uncomment to disable.
+//#define INVERT_CONTROL_PIN_MASK ((1<<CONTROL_SAFETY_DOOR_BIT)|(CONTROL_RESET_BIT)) // Default disabled.
 
 // Inverts select limit pin states based on the following mask. This effects all limit pin functions,
 // such as hard limits and homing. However, this is different from overall invert limits setting.
@@ -299,8 +306,8 @@
 // NOTE: WCO refresh must be 2 or greater. OVR refresh must be 1 or greater.
 #define REPORT_OVR_REFRESH_BUSY_COUNT 20  // (1-255)
 #define REPORT_OVR_REFRESH_IDLE_COUNT 15  // (1-255) Must be less than or equal to the busy count
-#define REPORT_WCO_REFRESH_BUSY_COUNT 2  // (2-255) was 30
-#define REPORT_WCO_REFRESH_IDLE_COUNT 2  // (2-255) Must be less than or equal to the busy count
+#define REPORT_WCO_REFRESH_BUSY_COUNT 30  // (2-255) was 30
+#define REPORT_WCO_REFRESH_IDLE_COUNT 20  // (2-255) Must be less than or equal to the busy count
 
 // The temporal resolution of the acceleration management subsystem. A higher number gives smoother
 // acceleration, particularly noticeable on machines that run at very high feedrates, but may negatively
@@ -309,7 +316,7 @@
 // NOTE: Changing this value also changes the execution time of a segment in the step segment buffer.
 // When increasing this value, this stores less overall time in the segment buffer and vice versa. Make
 // certain the step segment buffer is increased/decreased to account for these changes.
-#define ACCELERATION_TICKS_PER_SECOND 300 //100 or 500
+#define ACCELERATION_TICKS_PER_SECOND 150 //100 or 500
 
 // Adaptive Multi-Axis Step Smoothing (AMASS) is an advanced feature that does what its name implies,
 // smoothing the stepping of multi-axis motions. This feature smooths motion particularly at low step
@@ -437,7 +444,7 @@
 // NOTE: Uncomment to enable. The recommended delay must be > 3us, and, when added with the
 // user-supplied step pulse time, the total time must not exceed 127us. Reported successful
 // values for certain setups have ranged from 5 to 20us.
-#define STEP_PULSE_DELAY 10 // Step pulse delay in microseconds. Default disabled.
+// #define STEP_PULSE_DELAY 10 // Step pulse delay in microseconds. Default disabled.
 
 // The number of linear motions in the planner buffer to be planned at any give time. The vast
 // majority of RAM that Grbl uses is based on this buffer size. Only increase if there is extra

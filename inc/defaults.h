@@ -74,13 +74,13 @@
 //  #define DEFAULT_MODE 0 // Best mode
 //  #define HOMING_CYCLE_0 ((1<<X_AXIS)|(1<<Y_AXIS))
 ////#endif
-  #define DEFAULT_X_STEPS_PER_MM 160.0f
-  #define DEFAULT_Y_STEPS_PER_MM 160.0f
-  #define DEFAULT_Z_STEPS_PER_MM 160.0f
+  #define DEFAULT_X_STEPS_PER_MM 80.0f
+  #define DEFAULT_Y_STEPS_PER_MM 80.0f
+  #define DEFAULT_Z_STEPS_PER_MM 80.0f
   #define DEFAULT_A_STEPS_PER_MM 160.0f
   #define DEFAULT_B_STEPS_PER_MM 160.0f
-  #define DEFAULT_X_MAX_RATE 1000.0f // mm/min
-  #define DEFAULT_Y_MAX_RATE 1000.0f // mm/min
+  #define DEFAULT_X_MAX_RATE 1500.0f // mm/min
+  #define DEFAULT_Y_MAX_RATE 1500.0f // mm/min
   #define DEFAULT_Z_MAX_RATE 500.0f // mm/min
   #define DEFAULT_A_MAX_RATE 500.0f // mm/min
   #define DEFAULT_B_MAX_RATE 500.0f // mm/min
@@ -95,13 +95,18 @@
   #define DEFAULT_A_MAX_TRAVEL 200.0f // mm NOTE: Must be a positive value.
   #define DEFAULT_B_MAX_TRAVEL 200.0f // mm NOTE: Must be a positive value.
 //  #define DEFAULT_SPINDLE_RPM_MAX 2048.0f // rpm
-  #define DEFAULT_SPINDLE_RPM_MAX 11643.4f
+  #define DEFAULT_SPINDLE_RPM_MAX 12000.0f
 //  #define DEFAULT_SPINDLE_RPM_MIN 5.0f // rpm
-  #define DEFAULT_SPINDLE_RPM_MIN 810.9f // rpm 810.9
+  #define DEFAULT_SPINDLE_RPM_MIN 1.0f // rpm 810.9
   #define DEFAULT_STEP_PULSE_MICROSECONDS 10
   #define DEFAULT_STEPPING_INVERT_MASK 0
-  #define DEFAULT_DIRECTION_INVERT_MASK 0
+  #define DEFAULT_DIRECTION_INVERT_MASK 1
+#ifndef MG
   #define DEFAULT_STEPPER_IDLE_LOCK_TIME 100 // msec (0-254, 255 keeps steppers enabled)
+
+#else
+  #define DEFAULT_STEPPER_IDLE_LOCK_TIME 255 // msec (0-254, 255 keeps steppers enabled)
+#endif
   #define DEFAULT_STATUS_REPORT_MASK 31 // MPos enabled
   #define DEFAULT_JUNCTION_DEVIATION 0.01f // mm
   #define DEFAULT_ARC_TOLERANCE 0.002f // mm
@@ -111,10 +116,16 @@
   #define DEFAULT_SOFT_LIMIT_ENABLE 0 // false
   #define DEFAULT_HARD_LIMIT_ENABLE 0  // false
   #define DEFAULT_INVERT_PROBE_PIN 0 // false
+#ifndef MG
   #define DEFAULT_LASER_MODE 0 // false
+  #define DEFAULT_MODE 4 // Laser frequency
+#else
+  #define DEFAULT_LASER_MODE 1 // false
+  #define DEFAULT_MODE 2 // Laser frequency
+#endif
   #define DEFAULT_HOMING_ENABLE 1  // false
   #define DEFAULT_HOMING_DIR_MASK 3 // move positive dir
-  #define DEFAULT_HOMING_FEED_RATE 400.0f // mm/min
+  #define DEFAULT_HOMING_FEED_RATE 600.0f // mm/min
   #define DEFAULT_HOMING_SEEK_RATE 3000.0f // mm/min
   #define DEFAULT_HOMING_DEBOUNCE_DELAY 250 // msec (0-65k)
   #define DEFAULT_HOMING_PULLOFF 2.5f // mm
@@ -122,12 +133,17 @@
  * author Paul
  * PWM and Tool changer settings
  */
-  #define DEFAULT_MODE 0 // Best mode
+
   #define DEFAULT_FF 0 //0 = pulse 1 = flipflop
   #define DEFAULT_DELAY 100 // 1sec toggle for tool changer
   #define DEFAULT_M6_DELAY 100 // 1sec duration for M6 valve
   #define DEFAULT_SOFT_START 0 // disabled
-  #define HOMING_CYCLE_0 ((1<<X_AXIS)|(1<<Y_AXIS)|(1<<Z_AXIS))
+//  #define HOMING_CYCLE_0 ((1<<X_AXIS)|(1<<Y_AXIS))
+/*
+ * author Paul
+ * Fault pin on Spindle modules monitoring settings
+ */
+  #define DEFAULT_ENABLE_FAULT_PIN 0
 /*
  * Soft start curve
  */

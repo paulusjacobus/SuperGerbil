@@ -23,9 +23,9 @@
 
 // Grbl versioning system
 #define GRBL_VERSION "1.1f"
-#define GRBL_VERSION_BUILD "20190117"
-#define GRBL_SERIAL "0x00008" // Paul, added OEM info
-#define GRBL_SERIAL_BUILD "Date:20190117" //
+#define GRBL_VERSION_BUILD "20190323"
+#define GRBL_SERIAL "0x00001" // Paul, added OEM info
+#define GRBL_SERIAL_BUILD "Date:20190130" //
 #define GRBL_OEM "Awesome.tech" //
 #define GRBL_PRODUCT "SuperGerbil" //
 

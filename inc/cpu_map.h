@@ -31,7 +31,7 @@
 //#ifdef CPU_MAP_STM32F103
 
   // Define step pulse output pins. NOTE: All step bit pins must be on the same port.
-
+// MINI GERBIL FIRMWARE
 
 #define STEP_PORT       GPIOA
 #define RCC_STEP_PORT   RCC_APB2Periph_GPIOA
@@ -72,20 +72,28 @@
 #define LIMIT_PORT       GPIOB
 #define RCC_LIMIT_PORT   RCC_APB2Periph_GPIOB
 #define GPIO_LIMIT_PORT  GPIO_PortSourceGPIOB
+
+#ifdef MG
 #define X_LIMIT_BIT      10 //GPIO_Pin_10
-#define Y_LIMIT_BIT      12 //GPIO_Pin_11
-#define Z_LIMIT_BIT      11 //GPIO_Pin_12  // swapped Y,Z to allow pcb routing
-#define A_LIMIT_BIT      13  // additional axis Paul
-#define B_LIMIT_BIT      14  // additional 2nd axis
+#define Y_LIMIT_BIT      12 //GPIO_Pin_12
+#define Z_LIMIT_BIT      11 //GPIO_Pin_11  // swapped Y,Z to allow pcb routing
+#define A_LIMIT_BIT      13 //GPIO_Pin_13  // additional axis Paul
+#define B_LIMIT_BIT      14 //GPIO_Pin_14  // additional 2nd axis
+#else
+#define X_LIMIT_BIT      10 //GPIO_Pin_10
+#define Y_LIMIT_BIT      12 //GPIO_Pin_12
+#define Z_LIMIT_BIT      11 //GPIO_Pin_11  // swapped Y,Z to allow pcb routing
+#define A_LIMIT_BIT      13 //GPIO_Pin_13  // additional axis Paul
+#define B_LIMIT_BIT      14 //GPIO_Pin_14  // additional 2nd axis
+#endif
 /*
  * Author Paul added fault pin for DC motor feed back. In limit pins and not in control, because pin 15 falls in EXTI_15
  * All AFIO pins on Port B must be configured together otherwise only one (last one) with get active
  * and leave previous IO pins hanging in ***void*** or cyber space (whatever, just pick one).
  */
 #define CONTROL_FAULT_BIT             15 //PortB, GPIO_Pin_15, Added as an additional state, DC motor feedback pin (Low is a Fault condition)
-//#define LIMIT_MASK       ((1<<X_LIMIT_BIT)|(1<<Y_LIMIT_BIT)|(1<<Z_LIMIT_BIT)|(1<<A_LIMIT_BIT)|(1<<B_LIMIT_BIT)|(1<<CONTROL_FAULT_BIT)) // All limit bits
-#define LIMIT_MASK       ((1<<X_LIMIT_BIT)|(1<<Y_LIMIT_BIT)|(1<<Z_LIMIT_BIT)|(1<<A_LIMIT_BIT)|(1<<B_LIMIT_BIT)) // All limit bits
-
+#define LIMIT_MASK       ((1<<X_LIMIT_BIT)|(1<<Y_LIMIT_BIT)|(1<<Z_LIMIT_BIT)|(1<<A_LIMIT_BIT)|(1<<B_LIMIT_BIT)|(1<<CONTROL_FAULT_BIT)) // All limit bits
+//#define LIMIT_MASK       ((1<<X_LIMIT_BIT)|(1<<Y_LIMIT_BIT))
   // Define spindle enable and spindle direction output pins.
 #define SPINDLE_ENABLE_PORT         GPIOB //GPIOC
 #define RCC_SPINDLE_ENABLE_PORT     RCC_APB2Periph_GPIOB     //RCC_APB2Periph_GPIOC
@@ -95,12 +103,19 @@
 #define RCC_SPINDLE_DIRECTION_PORT  RCC_APB2Periph_GPIOB     //RCC_APB2Periph_GPIOC
 #define SPINDLE_DIRECTION_PORT      GPIOB //GPIOC
 #define SPINDLE_DIRECTION_BIT       2     //
+
 #define SetSpindleDirectionBit()    GPIO_WriteBit(SPINDLE_DIRECTION_PORT, 1 << SPINDLE_DIRECTION_BIT, Bit_SET)
 #define ResetSpindleDirectionBit()  GPIO_WriteBit(SPINDLE_DIRECTION_PORT, 1 << SPINDLE_DIRECTION_BIT, Bit_RESET)
+
 #endif
+#ifdef MG
+#define SetSpindleEnablebit()       GPIO_WriteBit(SPINDLE_ENABLE_PORT, 1 << SPINDLE_ENABLE_BIT, Bit_RESET)
+#define ResetSpindleEnablebit()     GPIO_WriteBit(SPINDLE_ENABLE_PORT, 1 << SPINDLE_ENABLE_BIT, Bit_SET)
+#else
 #define SetSpindleEnablebit()       GPIO_WriteBit(SPINDLE_ENABLE_PORT, 1 << SPINDLE_ENABLE_BIT, Bit_SET)
 #define ResetSpindleEnablebit()     GPIO_WriteBit(SPINDLE_ENABLE_PORT, 1 << SPINDLE_ENABLE_BIT, Bit_RESET)
 
+#endif
 
 //example of led blink = GPIO_WriteBit(GPIOC, GPIO_Pin_13, nOnFlag)
 
