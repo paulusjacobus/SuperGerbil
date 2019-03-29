@@ -106,9 +106,11 @@ int main(void)
 	 * A work around is to erase the chip first when it has been flashed before
 	 * so it's restored into the default pin configuration
 	 */
+#ifndef MG
     GPIO_PinRemapConfig(GPIO_Remap_SWJ_Disable, ENABLE);
     RCC->APB2ENR |= RCC_APB2ENR_AFIOEN; // added to release the jtag pins for gpio functions paul
     AFIO->MAPR = AFIO_MAPR_SWJ_CFG_DISABLE;
+#endif
 
     RCC_HCLKConfig(RCC_SYSCLK_Div1); // High speed data bus
     RCC_PCLK1Config(RCC_HCLK_Div2);//paul high speed peripheral bus
@@ -129,11 +131,11 @@ int main(void)
 	GPIO_InitStructure.GPIO_Pin = GPIO_Pin_13;
 	GPIO_Init(GPIOC, &GPIO_InitStructure);//GPIOC
 #endif
-uint8_t setflagmessage = 0;
+//uint8_t setflagmessage = 0;
 
 	//Set_System();
 //#ifndef USEUSB
-	USART1_Configuration(115200);
+	USART1_Configuration(115200);//230400 is possible
 //#else
 	Set_USBClock();
 	USB_Interrupts_Config();
@@ -242,13 +244,13 @@ uint8_t setflagmessage = 0;
      */
     if (GPIO_ReadInputDataBit(SERIALSWITCH_PORT, SERIALSWITCH_BIT) == 1){ //if the jumper is bridged->USB
 		while (Virtual_Com_port_IsHostPortOpen() == false){
-			delay_ms(500);
+			delay_ms(1500);
 			LedBlink();
 			}
 		}
     else { //Serial switch jumper is open ->USART
 		while (USART_GetFlagStatus(USART1, USART_FLAG_IDLE)== 0){
-			delay_ms(250);
+			delay_ms(500);
 			LedBlink();
 			}
     }
@@ -270,8 +272,8 @@ uint8_t setflagmessage = 0;
 void _delay_ms(uint32_t x)
 {
 	u32 temp;
-	//SysTick->LOAD = (u32)72000000 / 72000;                     // Loading time
-	SysTick->LOAD = (u32)72000000 / 8000 * x;                     // fix the ms delay variation
+	SysTick->LOAD = (u32)72000000 / 72000;                     // Loading time
+	//SysTick->LOAD = (u32)72000000 / 8000 * x;                     // fix the ms delay variation
 	SysTick->VAL = 0x00;                                            // Empty the counter
 	SysTick->CTRL = 0x01;                                           // Start from bottom
 	do

@@ -177,6 +177,7 @@ void EXTI15_10_IRQHandler(void)
 #endif
 {
 #if defined (STM32F103C8)
+	bool flag_fault = 0;
 	if (EXTI_GetITStatus(1 << X_LIMIT_BIT) != RESET)
 	{
 		EXTI_ClearITPendingBit(1 << X_LIMIT_BIT);
@@ -197,10 +198,13 @@ void EXTI15_10_IRQHandler(void)
 	{
 		EXTI_ClearITPendingBit(1 << B_LIMIT_BIT);
 	}
-//	if (EXTI_GetITStatus(1 << CONTROL_FAULT_BIT) != RESET) // Test DC Motor Faults
-//	{
-//		EXTI_ClearITPendingBit(1 << CONTROL_FAULT_BIT);
-//	}
+	if (bit_istrue(settings.flags,BITFLAG_FAULT_PIN)) {
+	  if (EXTI_GetITStatus(1 << CONTROL_FAULT_BIT) != RESET) // Test DC Motor Faults
+	  {
+		  EXTI_ClearITPendingBit(1 << CONTROL_FAULT_BIT);
+		  flag_fault = 1;
+	  }
+	}
 	NVIC_ClearPendingIRQ(EXTI15_10_IRQn);
 #endif
   // Ignore limit switches if already in an alarm state or in-process of executing an alarm.
@@ -218,7 +222,12 @@ void EXTI15_10_IRQHandler(void)
       }
 #else
       mc_reset(); // Initiate system kill.
-      system_set_exec_alarm(EXEC_ALARM_HARD_LIMIT); // Indicate hard limit critical event
+      if (flag_fault) {
+    	system_set_exec_alarm(EXEC_ALARM_HARD_FAULT);
+      }
+      else {
+        system_set_exec_alarm(EXEC_ALARM_HARD_LIMIT); // Indicate hard limit critical event
+      }
 #endif
     }
   }
