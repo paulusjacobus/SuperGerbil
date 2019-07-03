@@ -3,7 +3,7 @@ STM32 driven ARM Grbl firmware
 ![GitHub Logo](https://awesome.tech/wp-content/uploads/2018/11/20181030_103220-1-e1547624499622.jpg)
 
 ***
-Latest firmware (SG_stm32grbl11.hex) for the Super Gerbil CNC controller is available on here
+Latest firmware (SG_stm32grbl11.hex) for the Super Gerbil CNC controller is available here
 ***
 For the insights of ARM Grbl, please visit this page [click here] https://awesome.tech/grbl-demystified/
 
