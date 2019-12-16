@@ -44,16 +44,18 @@ volatile uint8_t sys_rt_exec_debug;
 
 #if defined (STM32F103C8)
 #include "usb_lib.h"
+
 #ifdef USEUSB
-#include "usb_desc.h"
-#endif
 #include "hw_config.h"
-#ifdef USEUSB
+#include "usb_desc.h"
 #include "usb_pwr.h"
+#include "usb_prop.h"
 #endif
+
 #include "stm32eeprom.h"
 //#ifndef USEUSB
 #include "stm32f10x_usart.h"
+
 void USART1_Configuration(u32 BaudRate)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
@@ -90,7 +92,7 @@ void USART1_Configuration(u32 BaudRate)
 #endif
 
 //#endif
-
+void LedBlink(void);
 
 #ifdef WIN32
 int main(int argc, char *argv[])
@@ -120,7 +122,10 @@ int main(void)
 
     //RCC_SYSCLKConfig(RCC_SYSCLKSource_PLLCLK);//paul
 
-#define LEDBLINK
+#ifndef LEDBLINK
+    #define LEDBLINK
+#endif
+
 #ifdef LEDBLINK
 	GPIO_InitTypeDef GPIO_InitStructure;
 
@@ -243,7 +248,7 @@ int main(void)
      *
      */
     if (GPIO_ReadInputDataBit(SERIALSWITCH_PORT, SERIALSWITCH_BIT) == 1){ //if the jumper is bridged->USB
-		while (Virtual_Com_port_IsHostPortOpen() == false){
+		while (Virtual_Com_Port_IsHostPortOpen() == false){
 			delay_ms(1500);
 			LedBlink();
 			}
@@ -286,19 +291,19 @@ void _delay_ms(uint32_t x)
 
 
 
-void LedBlink()
+void LedBlink(void)
 {
 	static BitAction nOnFlag = Bit_SET;
 	GPIO_WriteBit(GPIOC, GPIO_Pin_13, nOnFlag); // C13 is connected to led which flashes to demonstrate the program is running
 	nOnFlag = (nOnFlag == Bit_SET) ? Bit_RESET : Bit_SET;
 }
-void myputchar(unsigned char c)
-{
-uart_putc(c, USART1);
-}
-unsigned char mygetchar()
-{
-return uart_getc(USART1);
-}
+//void myputchar(unsigned char c)
+//{
+//uart_putc(c, USART1);
+//}
+//unsigned char mygetchar()
+//{
+//return uart_getc(USART1);
+//}
 
 #endif
