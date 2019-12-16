@@ -147,11 +147,11 @@ int main(void)
 	Set_USBClock();
 	USB_Interrupts_Config();
 
-	LED_Trace(2,1500); // TODO: mikep 12/15/19 working debug of USB_Init() failure
+	LED_TRACE(2,1500); // TODO: mikep 12/15/19 working debug of USB_Init() failure
 
 	USB_Init();
 
-	LED_Trace(4,500); // TODO: mikep 12/15/19 working debug of USB_Init() failure
+	LED_TRACE(4,500); // TODO: mikep 12/15/19 working debug of USB_Init() failure
 
 	//#endif
 
@@ -312,7 +312,7 @@ void LED_TRACE(char count, int delay)
 	for (x=0;x<count;x++)
 	{
 		LedBlink();
-		ms_delay(delay);
+		delay_ms(delay);
 	}
 }
 //void myputchar(unsigned char c)
