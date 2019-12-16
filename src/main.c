@@ -93,6 +93,8 @@ void USART1_Configuration(u32 BaudRate)
 
 //#endif
 void LedBlink(void);
+void LED_TRACE(char count, int delay);
+
 
 #ifdef WIN32
 int main(int argc, char *argv[])
@@ -144,8 +146,14 @@ int main(void)
 //#else
 	Set_USBClock();
 	USB_Interrupts_Config();
+
+	LED_Trace(2,1500); // TODO: mikep 12/15/19 working debug of USB_Init() failure
+
 	USB_Init();
-//#endif
+
+	LED_Trace(4,500); // TODO: mikep 12/15/19 working debug of USB_Init() failure
+
+	//#endif
 
 #ifndef NOEEPROMSUPPORT
 	FLASH_Unlock();
@@ -296,6 +304,16 @@ void LedBlink(void)
 	static BitAction nOnFlag = Bit_SET;
 	GPIO_WriteBit(GPIOC, GPIO_Pin_13, nOnFlag); // C13 is connected to led which flashes to demonstrate the program is running
 	nOnFlag = (nOnFlag == Bit_SET) ? Bit_RESET : Bit_SET;
+}
+
+void LED_TRACE(char count, int delay)
+{
+	char x;
+	for (x=0;x<count;x++)
+	{
+		LedBlink();
+		ms_delay(delay);
+	}
 }
 //void myputchar(unsigned char c)
 //{

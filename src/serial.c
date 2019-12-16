@@ -53,7 +53,7 @@ void do_report_init_message(void);
 
 void set_init_msg_report(void)
 {
-	do_report_init_message();
+	report_init_message();
 }
 
 // Returns the number of bytes available in the RX serial buffer.
