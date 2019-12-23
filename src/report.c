@@ -397,14 +397,12 @@ void report_gcode_modes()
   /*
    * Author Paul, M6 state added
    */
-  report_util_gcode_modes_M();
     if (gc_state.modal.tool_enable) { // Note: Multiple tool states may be active at the same time.
       if (gc_state.modal.tool_enable) { report_util_gcode_modes_M(); serial_write('6'); }
     }
 	/*
 	 *  End
 	 */
-  report_util_gcode_modes_M();
   #ifdef ENABLE_M7
     if (gc_state.modal.coolant) { // Note: Multiple coolant states may be active at the same time.
       if (gc_state.modal.coolant & PL_COND_FLAG_COOLANT_MIST) { report_util_gcode_modes_M(); serial_write('7'); }

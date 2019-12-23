@@ -49,9 +49,11 @@ uint8_t serial_tx_buffer[TX_RING_BUFFER];
 uint8_t serial_tx_buffer_head = 0;
 volatile uint8_t serial_tx_buffer_tail = 0;
 
-set_init_msg_report()
+void do_report_init_message(void);
+
+void set_init_msg_report(void)
 {
-	do_report_init_message();
+	report_init_message();
 }
 
 // Returns the number of bytes available in the RX serial buffer.

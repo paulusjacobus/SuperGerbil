@@ -98,7 +98,7 @@ void protocol_main_loop()
           report_status_message(STATUS_OVERFLOW);
         } else if (line[0] == 0) {
           // Empty or comment line. For syncing purposes.
-          //report_status_message(STATUS_OK);//Paul, 13/01/19 no need to ouput Ok
+          report_status_message(STATUS_OK);
         } else if (line[0] == '$') {
           // Grbl '$' system command
           report_status_message(system_execute_line(line));

@@ -40,8 +40,12 @@
 //#define DEFAULT_CNC3020
 
 #define SG
-#define STM32F103C8
-#define USEUSB
+#ifndef STM32F103C8
+	#define STM32F103C8
+#endif
+#ifndef USEUSB
+	#define USEUSB
+#endif
 
 #define CPU_MAP_STM32F103 // CPU_MAP_STM32F103
 #ifdef WIN32

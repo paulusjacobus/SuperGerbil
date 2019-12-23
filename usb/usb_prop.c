@@ -259,7 +259,7 @@ void Virtual_Com_Port_Status_Out(void)
 
 #include <stbool.h>
 static bool host_port_open = false;
-bool Virtual_Com_port_IsHostPortOpen()
+bool Virtual_Com_Port_IsHostPortOpen(void)
 {
 	return bDeviceState == CONFIGURED && host_port_open;
 }

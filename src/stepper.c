@@ -442,7 +442,7 @@ void Timer1Proc()
   // Set the direction pins a couple of nanoseconds before we step the steppers
   DIRECTION_PORT = (DIRECTION_PORT & ~DIRECTION_MASK) | (st.dir_outbits & DIRECTION_MASK);
 #endif
-#ifdef STM32F103C8;
+#ifdef STM32F103C8
 	//GPIO_WriteBit(ISR_PORT, ISR_BIT, Bit_SET); //start isr measure time
   //LedBlink(); // Paul, enter the isr for oscilloscope
   GPIO_Write(DIRECTION_PORT, (GPIO_ReadOutputData(DIRECTION_PORT) & ~DIRECTION_MASK) | (st.dir_outbits & DIRECTION_MASK));
