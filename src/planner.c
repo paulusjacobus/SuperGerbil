@@ -44,8 +44,7 @@ static planner_t pl;
 uint8_t plan_next_block_index(uint8_t block_index)
 {
   block_index++;
-  if (block_index >= BLOCK_BUFFER_SIZE-3){report_realtime_status();}
-  if (block_index == BLOCK_BUFFER_SIZE) { block_index = 0;}
+  if (block_index == BLOCK_BUFFER_SIZE) { block_index = 0;}  // wrap ring
   return(block_index);
 }
 
@@ -53,7 +52,7 @@ uint8_t plan_next_block_index(uint8_t block_index)
 // Returns the index of the previous block in the ring buffer
 static uint8_t plan_prev_block_index(uint8_t block_index)
 {
-  if (block_index == 0) { block_index = BLOCK_BUFFER_SIZE; }
+  if (block_index == 0) { block_index = BLOCK_BUFFER_SIZE; } // wrap ring
   block_index--;
   return(block_index);
 }
@@ -393,7 +392,7 @@ uint8_t plan_buffer_line(float *target, plan_line_data_t *pl_data)
 
   // Store programmed rate.
   if (block->condition & PL_COND_FLAG_RAPID_MOTION) { block->programmed_rate = block->rapid_rate; }
-  else { 
+  else {
     block->programmed_rate = pl_data->feed_rate;
     if (block->condition & PL_COND_FLAG_INVERSE_TIME) { block->programmed_rate *= block->millimeters; }
   }
